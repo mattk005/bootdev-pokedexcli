@@ -1,13 +1,11 @@
 package pokecache
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
 
 func NewCache(interval time.Duration) *Cache {
-	fmt.Printf("NewCache(%d) has been run\n", interval)
 	data := make(map[string]cacheEntry)
 	cashe := Cache{data: data}
 	go cashe.reapLoop(interval)
