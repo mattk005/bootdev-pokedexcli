@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"pokedexcli/internal/pokeapi"
-	"pokedexcli/internal/pokecache"
 )
 
 func StartRepl(cfg *config) {
@@ -42,7 +41,6 @@ func cleanInput(text string) []string {
 
 type config struct {
 	pokeapiClient    pokeapi.Client
-	pokecache        *pokecache.Cache
 	nextLocationsURL *string
 	prevLocationsURL *string
 }
