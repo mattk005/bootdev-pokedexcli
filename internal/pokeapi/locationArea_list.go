@@ -2,22 +2,24 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
 
-// ListLocations -
-func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
-	url := baseURL + "/location-area"
-	if pageURL != nil {
-		url = *pageURL
+// ListLocationArea -
+func (c *Client) ListLocationArea(argument *string) (RespDeepLocations, error) {
+	if argument == nil {
+		fmt.Println("No URL for client.ListLocationArea()")
+		return RespDeepLocations{}, nil
 	}
+	url := baseURL + fmt.Sprintf("/location-area/%s/", *argument)
 	// Add cache block
 	if dat, ok := c.cache.Get(url); ok {
-		locationsResp := RespShallowLocations{}
+		locationsResp := RespDeepLocations{}
 		err := json.Unmarshal(dat, &locationsResp)
 		if err != nil {
-			return RespShallowLocations{}, err
+			return RespDeepLocations{}, err
 		}
 		// fmt.Println("---Used Cache---")
 		return locationsResp, nil
@@ -25,11 +27,11 @@ func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return RespShallowLocations{}, err
+		return RespDeepLocations{}, err
 	}
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return RespShallowLocations{}, err
+		return RespDeepLocations{}, err
 	}
 	defer resp.Body.Close()
 
@@ -37,12 +39,12 @@ func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
 	// if it's not cached, add it to cache
 	c.cache.Add(url, dat)
 	if err != nil {
-		return RespShallowLocations{}, err
+		return RespDeepLocations{}, err
 	}
-	locationsResp := RespShallowLocations{}
+	locationsResp := RespDeepLocations{}
 	err = json.Unmarshal(dat, &locationsResp)
 	if err != nil {
-		return RespShallowLocations{}, err
+		return RespDeepLocations{}, err
 	}
 	return locationsResp, nil
 }
