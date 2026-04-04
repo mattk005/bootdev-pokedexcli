@@ -11,7 +11,6 @@ import (
 
 func StartRepl(cfg *config) {
 	reader := bufio.NewScanner(os.Stdin)
-	// _ = test(cfg)
 	for {
 		fmt.Print("Pokedex > ")
 		reader.Scan()
@@ -46,7 +45,7 @@ func cleanInput(text string) []string {
 
 type config struct {
 	pokeapiClient    pokeapi.Client
-	argument         string
+	pokedex          map[string]pokeapi.RespPokemonInfo
 	nextLocationsURL *string
 	prevLocationsURL *string
 }
@@ -84,11 +83,15 @@ func getCommands() map[string]cliCommand {
 			description: "Takes an area as an argument and returns a list of all pokemon in that area",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "catch",
+			description: "Attempts to catch a Pokemon (\"throwing Pokeball at ...\") chance is based on pokemon's base exp, caught pokemon is added to pokedex",
+			callback:    commandCatch,
+		},
+		"inspect": {
+			name:        "inspect",
+			description: "takes the name of a Pokemon and prints the name, height, weight, stats and type(s)",
+			callback:    commandInspect,
+		},
 	}
 }
-
-// func test(cfg *config) error {
-// 	cfg.argument = "canalave-city-area"
-// 	_ = commandExplore(cfg)
-// 	return nil
-// }

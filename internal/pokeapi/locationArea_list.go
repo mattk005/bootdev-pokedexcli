@@ -33,14 +33,18 @@ func (c *Client) ListLocationArea(argument *string) (RespDeepLocations, error) {
 	if err != nil {
 		return RespDeepLocations{}, err
 	}
+	if resp.StatusCode > 299 {
+		fmt.Printf("Invalid area, error code :%d\n", resp.StatusCode)
+		return RespDeepLocations{}, err
+	}
 	defer resp.Body.Close()
 
 	dat, err := io.ReadAll(resp.Body)
-	// if it's not cached, add it to cache
-	c.cache.Add(url, dat)
 	if err != nil {
 		return RespDeepLocations{}, err
 	}
+	// if it's not cached, add it to cache
+	c.cache.Add(url, dat)
 	locationsResp := RespDeepLocations{}
 	err = json.Unmarshal(dat, &locationsResp)
 	if err != nil {
