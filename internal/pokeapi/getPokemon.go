@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// getPokemon
+// GetPokemon
 func (c *Client) GetPokemon(argument *string) (RespPokemonInfo, error) {
 	if argument == nil {
 		fmt.Println("No argument (pokemon) for client.getPokemon()")
@@ -31,8 +31,7 @@ func (c *Client) GetPokemon(argument *string) (RespPokemonInfo, error) {
 		return RespPokemonInfo{}, err
 	}
 	if resp.StatusCode > 299 {
-		fmt.Printf("Invalid pokemon, error code :%d\n", resp.StatusCode)
-		return RespPokemonInfo{}, err
+		return RespPokemonInfo{}, fmt.Errorf("Invalid pokemon, error code :%d\n", resp.StatusCode)
 	}
 	defer resp.Body.Close()
 
